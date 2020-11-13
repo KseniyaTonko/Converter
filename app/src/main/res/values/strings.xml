@@ -1,0 +1,30 @@
+<resources>
+    <string name="app_name">Converter</string>
+    <string name="menuGroup1">Вес</string>
+    <string name="menuGroup2">Расстояние</string>
+    <string name="menu2Item1">км</string>
+    <string name="menu2Item2">миля</string>
+    <string name="one">1</string>
+    <string name="editText1">hah</string>
+    <string name="editText2">exexe</string>
+    <string name="btn1">1</string>
+    <string name="btn7">7</string>
+    <string name="btn8">8</string>
+    <string name="btn9">9</string>
+    <string name="btn4">4</string>
+    <string name="btn5">5</string>
+    <string name="btn6">6</string>
+    <string name="btn2">2</string>
+    <string name="btn3">3</string>
+    <string name="btn0">0</string>
+    <string name="btnX">del</string>
+    <string name="btnEnter">enter</string>
+    <string name="btnClear">clear</string>
+    <string name="input_number">Input number</string>
+    <string name="converted_number">Converted number</string>
+    <string name="btnDot">.</string>
+    <string name="weight">weight</string>
+    <string name="distance">distance</string>
+    <string name="swapButton">swap</string>
+    <string name="copy">copy</string>
+</resources>
