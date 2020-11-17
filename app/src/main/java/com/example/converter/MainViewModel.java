@@ -168,5 +168,35 @@ public class MainViewModel extends AndroidViewModel {
         numberOutput.setValue("");
     }
 
+    public void swapFields(Spinner spinner0, Spinner spinner1, Spinner spinner2) {
+        String temp = numberInput.getValue();
+        numberInput.postValue(numberOutput.getValue());
+        numberOutput.postValue(temp);
+
+        int i = spinner1.getSelectedItemPosition();
+        int j = spinner2.getSelectedItemPosition();
+        spinner1.setSelection((j + 1) % 3);
+        spinner2.setSelection((i + 2) % 3);
+
+        String group = spinner0.getSelectedItem().toString();
+        String item1 = spinner1.getSelectedItem().toString();
+        String item2 = spinner2.getSelectedItem().toString();
+        prepareToConverting(group, item1, item2);
+    }
+
+    public void copy(ClipboardManager clipboardManager, boolean isInput) {
+        ClipData clipData;
+        clipData = ClipData.newPlainText("number", getCopyString(isInput));
+        clipboardManager.setPrimaryClip(clipData);
+        Toast.makeText(getApplication(),
+                "Number copied", Toast.LENGTH_SHORT).show();
+    }
+
+    private String getCopyString(boolean isInput) {
+        if (isInput) {
+            return numberInput.getValue();
+        }
+        return numberOutput.getValue();
+    }
 
 }
