@@ -9,17 +9,13 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.Toast;
 
 import java.util.Objects;
 
@@ -117,9 +113,11 @@ public class FragmentFields extends Fragment implements AdapterView.OnItemSelect
 
         viewModel.getNumberInput().observe(requireActivity(), value -> editTextIn.setText(value));
         viewModel.getNumberOutput().observe(requireActivity(), value -> editTextOut.setText(value));
+
         view.findViewById(R.id.swapButton).setOnClickListener(item -> viewModel.swapFields(spinnerGroup, spinnerIn, spinnerOut));
 
         clipboardManager = (ClipboardManager)getActivity().getSystemService(CLIPBOARD_SERVICE);
+
         view.findViewById(R.id.copyInput).setOnClickListener(item -> viewModel.copy(clipboardManager,true));
         view.findViewById(R.id.copyOutput).setOnClickListener(item -> viewModel.copy(clipboardManager,false));
     }
