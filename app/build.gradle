@@ -15,7 +15,7 @@ def getVersionTag = { variant ->
 
         return longTag.substring(longTag.indexOf('/') + 1, longTag.indexOf('-'))
     } catch (exception) {
-        return "0.0.1";
+        return "6.6.6";
     }
 }
 
@@ -84,14 +84,16 @@ android {
     }
 
     applicationVariants.all { variant ->
-        def versionTag = getVersionTag(variant.buildType.name)
-        def myVersionCode = getVersionCode(versionTag)
-        def myVersionName = getVersionName(versionTag)
+        variant.outputs.each { output ->
+            def versionTag = getVersionTag(variant.buildType.name)
+            def myVersionCode = getVersionCode(versionTag)
+            def myVersionName = getVersionName(versionTag)
 
-        println variant.name + "[" + myVersionCode + ", " + myVersionName + "]"
+            println variant.name + "[" + myVersionCode + ", " + myVersionName + "]"
 
-        variant.mergedFlavor.versionName = myVersionName;
-        variant.mergedFlavor.versionCode = myVersionCode;
+            output.versionNameOverride = myVersionName;
+            output.versionCodeOverride = myVersionCode;
+        }
     }
 
 }
