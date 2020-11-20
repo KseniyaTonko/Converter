@@ -2,6 +2,41 @@ plugins {
     id 'com.android.application'
 }
 
+
+def getVersionTag = { variant ->
+    def stdout
+    try {
+        stdout = new ByteArrayOutputStream()
+        exec {
+            commandLine "git", "describe", "--match", "${variant}/*", "--long"
+            standardOutput = stdout
+        }
+        def longTag = stdout.toString().trim()
+
+        return longTag.substring(longTag.indexOf('/') + 1, longTag.indexOf('-'))
+    } catch (exception) {
+        return "0.0.1";
+    }
+}
+
+def getVersionCode = { tag ->
+    def parts = tag.tokenize('.')
+    if(parts.size() != 3 || parts[1].length() > 2 || parts[2].length() > 2) {
+        throw new RuntimeException("Invalid version tag \"${tag}\", format \"x.y.z\" expected.")
+    }
+    if(parts[1].length() == 1) {
+        parts[1] = "0" + parts[1]
+    }
+    if(parts[2].length() == 1) {
+        parts[2] = "0" + parts[2]
+    }
+    return Integer.parseInt(parts[0] + parts[1] + parts[2])
+}
+
+def getVersionName = { tag ->
+    return tag
+}
+
 android {
     compileSdkVersion 29
     buildToolsVersion "30.0.2"
@@ -10,35 +45,28 @@ android {
         applicationId "com.example.converter"
         minSdkVersion 16
         targetSdkVersion 29
-        versionCode 1
-        versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
-/*
-    productFlavors {        //добавила
+
+    flavorDimensions 'type'
+    productFlavors {
         free {
-            applicationId "com.example.converter.main"
-            minSdkVersion 16
-            targetSdkVersion 29
-            versionCode 1
-            versionName '1.0'
+            applicationId "com.example.converter.free"
+            dimension 'type'
         }
-        pro {
-            applicationId "com.example.converter.main"
-            minSdkVersion 16
-            targetSdkVersion 29
-            versionCode 1
-            versionName '1.0'
+        paid {
+            applicationId "com.example.converter.paid"
+            dimension 'type'
         }
-    }*/
+    }
 
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
-
+/*
         free {
             applicationIdSuffix ".free"
             signingConfig signingConfigs.debug
@@ -47,12 +75,23 @@ android {
         paid {
             applicationIdSuffix ".paid"
             signingConfig signingConfigs.debug
-        }
+        }*/
 
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    applicationVariants.all { variant ->
+        def versionTag = getVersionTag(variant.buildType.name)
+        def myVersionCode = getVersionCode(versionTag)
+        def myVersionName = getVersionName(versionTag)
+
+        println variant.name + "[" + myVersionCode + ", " + myVersionName + "]"
+
+        variant.mergedFlavor.versionName = myVersionName;
+        variant.mergedFlavor.versionCode = myVersionCode;
     }
 
 }
